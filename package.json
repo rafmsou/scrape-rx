@@ -1,0 +1,27 @@
+{
+  "name": "farerx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "functions-framework --target=entrypoint",
+    "watch": "concurrently  -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
+    "watch-node": "nodemon --watch ./built/ --exec npm run start",
+    "watch-ts": "tsc -w",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "rafmsou@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^2.1.1",
+    "puppeteer-extra": "^3.1.9",
+    "puppeteer-extra-plugin-adblocker": "^2.11.3",
+    "puppeteer-extra-plugin-stealth": "^2.4.9",
+    "pending-xhr-puppeteer": "^2.1.0"
+  },
+  "devDependencies": {
+    "@google-cloud/functions-framework": "^1.5.0",
+    "@types/puppeteer": "^2.0.1",
+    "@types/express": "^4.17.3"
+  }
+}
