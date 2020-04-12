@@ -1,30 +1,16 @@
 import { Browser } from "puppeteer"
 import * as express from "express"
-// puppeteer-extra is a drop-in replacement for puppeteer,
-// it augments the installed puppeteer with plugin functionality.
-// Any number of plugins can be added through `puppeteer.use()`
 import puppeteer from "puppeteer-extra"
 // Pending XHR Puppeteer is a tool that detect when there is xhr requests not yet finished.
 import { PendingXHR } from "pending-xhr-puppeteer"
-// Add stealth plugin and use defaults (all tricks to hide puppeteer usage)
-import StealthPlugin from "puppeteer-extra-plugin-stealth"
-// Add adblocker plugin to block all ads and trackers (saves bandwidth)
-import AdblockerPlugin from "puppeteer-extra-plugin-adblocker"
-
-puppeteer.use(AdblockerPlugin({ blockTrackers: true }))
-puppeteer.use(StealthPlugin())
+import { validateRequest } from "./helpers"
 
 const url = "https://www.goodrx.com/"
 const source = "goodrx"
 
 exports.invoke = (req: express.Request, res: express.Response) => {
 
-  if (!req.query.drug) {
-    res.status(200).send({ offers: [], error: "`drug` query param is missing" })
-    return
-  }
-  if (!req.query.zipcode) {
-    res.status(200).send({ offers: [], error: "`zipcode` query param is missing" })
+  if (!validateRequest(req, res)) {
     return
   }
 
@@ -37,7 +23,7 @@ exports.invoke = (req: express.Request, res: express.Response) => {
     await page.goto(url, { timeout: 0 })
 
     try {
-      await page.waitForSelector("input[data-qa='search_inp']", { timeout: 1000 })
+      await page.waitForSelector("input[data-qa='search_inp']", { timeout: 3000 })
       await page.type("input[data-qa='search_inp']", drug, { delay: 100 })
       await page.waitForSelector("nav[data-qa='typeahead'] > a")
       await page.waitFor(500)
@@ -81,7 +67,7 @@ exports.invoke = (req: express.Request, res: express.Response) => {
       await browser.close()
     } catch (error) {
       console.error(error)
-      res.status(200).send({ source, offers: [], error })
+      res.status(200).send({ source, offers: [], error: error.toString() })
       await browser.close()
     }
   })

@@ -3,10 +3,10 @@ import * as express from "express"
 import puppeteer from "puppeteer-extra"
 import { validateRequest } from "./helpers"
 
-const url = "https://savingstool.lowermyrx.com/"
-const source = "lowermyrx"
+const url = "https://www.wellrx.com/"
+const source = "wellrx"
 
-exports.invoke = (req: express.Request, res: express.Response) => {
+export const invoke = (req: express.Request, res: express.Response) => {
 
   if (!validateRequest(req, res)) {
     return
@@ -18,24 +18,24 @@ exports.invoke = (req: express.Request, res: express.Response) => {
     await page.goto(url, { timeout: 0 })
 
     try {
-      await page.waitForSelector("#SearchDrugText", { timeout: 3000 })
-      await page.type("#SearchDrugText", req.query.drug, { delay: 100 })
-      await page.waitForSelector(".popular_sesrch > ul > li")
+      await page.waitForSelector("#drugname", { timeout: 3000 })
+      await page.type("#drugname", req.query.drug, { delay: 300 })
+      await page.waitForSelector("ul.ui-autocomplete")
+      await page.click("ul.ui-autocomplete > li")
       await page.waitFor(500)
-      await page.click(".popular_sesrch > ul > li")
+      await page.type("#address", req.query.zipcode)
 
-      await page.waitForSelector("#getzipcode")
-      await page.type("#getzipcode", req.query.zipcode)
-      await page.click(".find_button")
+      await Promise.all([
+        page.waitForNavigation(),
+        page.click("#btnSearch"),
+      ])
 
-      await page.waitForSelector(".pharmacy_list .card", { timeout: 5000 })
-      await page.waitFor(500)
-
+      await page.waitForSelector(".price-list-item")
       const offers = await page.$$eval(
-        ".pharmacy_list .card",
-        divs => divs.map(card => {
-          const pharmacy = card.querySelector(".name_Sec > p")
-          const price = card.querySelector(".name_Sec > span")
+        ".price-list-item",
+        divs => divs.map(div => {
+          const pharmacy = div.querySelector("div > div > p")
+          const price = div.querySelector(".pricesm")
 
           return {
             pharmacyName: pharmacy ? pharmacy.textContent : null,
