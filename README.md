@@ -7,11 +7,15 @@ This consists of a set of lambda functions written in Typescript and compiled
 to ES5, one for each service provider.
 
 ### Endpoints
+```
 http://localhost:8080/goodrx -> Scrape from https://www.goodrx.com
 http://localhost:8080/wellrx -> Scrape from https://www.wellrx.com
 http://localhost:8080/lowermyrx -> Scrape from https://savingstool.lowermyrx.com
 http://localhost:8080/optumperks -> Scrape from https://perks.optum.com
 http://localhost:8080/rxsaver -> Scrape from https://rxsaver.retailmenot.com
+```
+Each endpoint requires a `drug` and `zipcode` parameter that it'll use to input
+on each target platform.
 
 ### How to Run
 `yarn start` to spin up a local server for cloud functions
@@ -39,6 +43,7 @@ GET http://localhost:8080/wellrx?drug=metformin&zipcode=91325
     ],
     "location": "91325"
 }
+```
 
 GET http://localhost:8080/optumperks?drug=lipitor&zipcode=91325
 ```
