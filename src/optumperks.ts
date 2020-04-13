@@ -37,15 +37,15 @@ exports.invoke = (req: express.Request, res: express.Response) => {
       await page.waitFor(500)
 
       await Promise.all([
-        page.waitForNavigation(),
+        page.waitForNavigation({ timeout: 3000 }),
         page.click("ul.ui-autocomplete > li"),
       ])
 
-      await page.waitForSelector("#results-div .pharmacy-record .pharmacy-record-col")
       await pendingXHR.waitForAllXhrFinished()
+      await page.waitForSelector("#results-div .pharmacy-record:nth-child(3n)")
 
       const offers = await page.$$eval(
-        "#results-div .pharmacy-record",
+        "#results-div .pharmacy-record:nth-of-type(-n+3)",
         (divs: Element[]) => divs.map(div => {
           const { pharmacy, price } = (div as HTMLElement).dataset
           return {

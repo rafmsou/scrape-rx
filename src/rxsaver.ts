@@ -37,7 +37,7 @@ exports.invoke = (req: express.Request, res: express.Response) => {
       await page.waitForSelector(".results-list > div")
 
       const offers = await page.$$eval(
-        ".results-list > div",
+        ".results-list > div:nth-of-type(-n+3)",
         divs => divs.map(div => {
           const pharmacy = div.querySelector(".pharmacy-name")
           const price = div.querySelector(".result-item-price")

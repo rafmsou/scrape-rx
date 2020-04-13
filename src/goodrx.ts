@@ -43,7 +43,7 @@ exports.invoke = (req: express.Request, res: express.Response) => {
       );
 
       const offers = await page.$$eval(
-        "li[data-qa='price_row']",
+        "li[data-qa='price_row']:nth-of-type(-n+3)",
         (divs: Element[]) => divs.map(div => {
           const pharmacy = div.querySelector("div[data-qa='store_name'] > span:nth-of-type(2)")
           const priceElement = div.querySelector("div[data-qa='drug_price']")
