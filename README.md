@@ -1,4 +1,4 @@
-## ScrapeRx
+## ScrapeRx ⛏⛏⛏
 List the best prices (top 3) for prescription drugs from a list of 3rd party platforms such
 as GoodRx and WellRx by scraping their Web Apps using puppeteer and a set of plugins (puppeteer-extra)
 to avoid being blocked by CAPTCHA systems.
